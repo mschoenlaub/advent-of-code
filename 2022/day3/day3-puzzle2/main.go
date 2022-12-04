@@ -1,19 +1,11 @@
 package main
 
 import (
+	"advent-of-code/2022/utils"
 	"bufio"
 	"fmt"
 	"os"
-	"sort"
 )
-
-func priority(r rune) int {
-	if r > 'Z' {
-		return int(r - 'a' + 1)
-	} else {
-		return int(r - 'A' + 27)
-	}
-}
 
 func findCommon(a, b, c []rune) (int32, []rune, []rune, []rune) {
 	if a[0] == b[0] && b[0] == c[0] {
@@ -33,23 +25,14 @@ func main() {
 	scanner := bufio.NewScanner(f)
 	priorities := 0
 	for scanner.Scan() {
-		first := []rune(scanner.Text())
+		first := utils.SortAndDedupe([]rune(scanner.Text()))
 		scanner.Scan()
-		second := []rune(scanner.Text())
+		second := utils.SortAndDedupe([]rune(scanner.Text()))
 		scanner.Scan()
-		third := []rune(scanner.Text())
+		third := utils.SortAndDedupe([]rune(scanner.Text()))
 
-		sort.Slice(first, func(i, j int) bool {
-			return first[i] < first[j]
-		})
-		sort.Slice(second, func(i, j int) bool {
-			return second[i] < second[j]
-		})
-		sort.Slice(third, func(i, j int) bool {
-			return third[i] < third[j]
-		})
 		badge, _, _, _ := findCommon(first, second, third)
-		priorities += priority(badge)
+		priorities += utils.Priority(badge)
 	}
 	fmt.Println(priorities)
 }
